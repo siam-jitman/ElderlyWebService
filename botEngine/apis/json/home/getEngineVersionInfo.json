@@ -1,0 +1,10 @@
+{
+	"success": true,
+	"responseHeader": {
+		"responseCode": "0000I",
+		"responseDescription": "Success"
+	},
+	"responseData": {
+		"versionId": "1.0.0.0"
+	}
+}

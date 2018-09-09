@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "responseHeader": {
+      "responseCode": "0000I",
+      "responseDescription": "Success"
+  },
+  "responseData": {
+      "success": true,
+      "dataList": [
+          {
+              "userId": "testBot10"
+          },
+          {
+              "userId": "testBot11"
+          },
+          {
+              "userId": "testBot25"
+          },
+          {
+              "userId": "testBot32"
+          },
+          {
+              "userId": "testBot12"
+          },
+          {
+              "userId": "testBot41"
+          }
+      ]
+  }
+}
