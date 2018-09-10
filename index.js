@@ -1,4 +1,9 @@
-const login = require('./botEngine/apis/authen/login.json');
+const dbUtil = require('./common/databaseUtil/index.js');
+
+var TAG = "./index.js => ";
+
+//import config 
+const config = require('./config/config.json');
 
 const fileUpload = require('express-fileupload');
 const express = require('express')
@@ -6,21 +11,10 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express();
 const util = require('util');
-const mysql = require('mysql');
 
-//import config 
-const config = require('./config/config.json');
-
-const connection = mysql.createConnection(config.dbConfig);
-
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+const connection = dbUtil.connect();
 
 console.log(util.format('%s:%s', 'foo', 'dddddddddddddd'));
-
-var TAG = "./index.js => ";
 
 // var corsOptions = {
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -35,29 +29,16 @@ app.use(bodyParser.json({
 app.use(fileUpload());
 
 app.post('/service/elderly/getContent', (req, res, next) => {
-  console.log('/service/elderly/getContent > req => ' + JSON.stringify(req.body, null, 3))
+  console.log('/service/elderly/getContent > req => ' + JSON.stringify(req.body, null, 3));
   res.setHeader('Content-Type', 'application/json');
-
-  var responeData = {...config.responeData};
-
   new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM content', function (error, results, fields) {
-      if (error) {
-        responeData.resultSuccess = false;
-        responeData.resultMessage = JSON.parse(JSON.stringify(error)).code;
-        // return;
-      } else {
-        console.log(TAG + '/service/elderly/getContent => JSON.stringify(results) => ', JSON.stringify(results));
-        responeData.resultData = results;
-        responeData.resultSuccess = true;
-      }
-      resolve();
-    });
-  }).then(() => {
+    var responeData = dbUtil.query(connection, "SELECT * FROM content");
+    resolve(responeData);
+  }).then((responeData) => {
+    console.log(TAG + 'app.post() => /service/elderly/getContent => responeData => ', responeData);
     res.statusCode = 200;
     res.send(JSON.stringify(responeData, null, 3));
   });
-
 });
 
 
