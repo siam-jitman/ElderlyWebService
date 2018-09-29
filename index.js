@@ -1,9 +1,6 @@
-const dbUtil = require('./common/databaseUtil/index.js');
+const ContentCtrl = require('./src/controller/ContentCtrl.js');
 
 var TAG = "./index.js => ";
-
-//import config 
-const config = require('./config/config.json');
 
 const fileUpload = require('express-fileupload');
 const express = require('express')
@@ -11,8 +8,6 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express();
 const util = require('util');
-
-const connection = dbUtil.connect();
 
 console.log(util.format('%s:%s', 'foo', 'dddddddddddddd'));
 
@@ -28,16 +23,19 @@ app.use(bodyParser.json({
 // default options
 app.use(fileUpload());
 
-app.post('/service/elderly/getContent', (req, res, next) => {
-  console.log('/service/elderly/getContent > req => ' + JSON.stringify(req.body, null, 3));
-  res.setHeader('Content-Type', 'application/json');
-  new Promise((resolve, reject) => {
-    var responeData = dbUtil.query(connection, "SELECT * FROM content");
-    resolve(responeData);
-  }).then((responeData) => {
-    console.log(TAG + 'app.post() => /service/elderly/getContent => responeData => ', responeData);
+app.post('/service/elderly/listContent', (req, res, next) => {
+  ContentCtrl.listContent().then((responeData) => {
+    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
-    res.send(JSON.stringify(responeData, null, 3));
+    res.send(responeData);
+  });
+});
+
+app.post('/service/elderly/findContentById', (req, res, next) => {
+  ContentCtrl.findContentById(req).then((responeData) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.statusCode = 200;
+    res.send(responeData);
   });
 });
 
@@ -63,4 +61,4 @@ app.post('/service/elderly/getContent', (req, res, next) => {
 //   //   });
 // });
 
-app.listen(3001, () => console.log('Started server listening on port 3001!'))
+app.listen(3000, () => console.log('Started server listening on port 3000!'))
