@@ -20,8 +20,21 @@ console.log(util.format('%s:%s', 'foo', 'dddddddddddddd'));
 
 // app.use(express.static('/scr/webpage/image'));
 // app.use('/image', express.static("/scr/webpage/image"));
+
+
+app.use('/', express.static(__dirname + "/public/webpage/"));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(path.resolve(__dirname) + '/public/webpage/'));
+});
+
+app.use('/admin', express.static(__dirname + "/public/webpage/admin"));
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(path.resolve(__dirname) + '/public/webpage/admin'));
+});
+
 app.use('/public/image', express.static(__dirname + "/public/image"));
 app.use('/public/ebook', express.static(__dirname + "/public/ebook"));
+app.use('/public/video', express.static(__dirname + "/public/video"));
 
 app.use(cors());
 app.use(bodyParser.json({
@@ -42,29 +55,65 @@ app.use((req, res, next) => {
 // app.get("/image", (req, res) => {
 //   res.sendFile(path.join(path.resolve(PROJECT_DIR) + '/webpage/index.html'));
 // });
-app.post('/service/content/uploadImageDetail', function (req, res) {
-  UploadCtrl.uploadImageDetail(req, __dirname).then((responeData) => {
-    console.log(responeData);
-    res.send(responeData);
-  });
-});
-
-app.post('/service/content/uploadEBookContent', function (req, res) {
-  UploadCtrl.uploadFileEBook(req.files.fileEBookContent, __dirname).then((responeData) => {
-    console.log(responeData);
-    res.send(responeData);
-  });
-});
 
 //----------------------system API----------------------//
+//====================== auth ==========================//
 app.post('/service/system/auth/login', (req, res, next) => {
   AuthenCtrl.login(req).then((responeData) => {
     res.send(responeData);
   });
 });
 
+app.post('/service/system/auth/register', (req, res, next) => {
+  console.log("/service/system/auth/register => " , req.body);
+  AuthenCtrl.register(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/system/auth/uploadImageProfile', (req, res, next) => {
+  UploadCtrl.uploadImageProfileMember(req.files.imageMember, __dirname).then((responeData) => {
+    console.log("/service/system/auth/uploadImageProfile => " , responeData);
+    res.send(responeData);
+  });
+});
+
+
+//====================== member ==========================//
+app.post('/service/member/findMemberById', (req, res, next) => {
+  AuthenCtrl.findMemberById(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+
+//====================== content ==========================//
 app.post('/service/content/addContentByIdMember', (req, res, next) => {
   ContentCtrl.addContentByIdMember(req, __dirname).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/editContentByIdContent', (req, res, next) => {
+  ContentCtrl.editContentByIdContent(req, __dirname).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/updateStatusContent', (req, res, next) => {
+  ContentCtrl.updateStatusContent(req, __dirname).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/findContentInActive', (req, res, next) => {
+  ContentCtrl.findContentInActive(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/findContentByIdMember', (req, res, next) => {
+  ContentCtrl.findContentByIdMember(req).then((responeData) => {
     res.send(responeData);
   });
 });
@@ -76,13 +125,52 @@ app.post('/service/content/findContentByIdMember', (req, res, next) => {
 });
 
 app.post('/service/content/listContent', (req, res, next) => {
-  ContentCtrl.listContent().then((responeData) => {
+  ContentCtrl.listContent(req).then((responeData) => {
     res.send(responeData);
   });
 });
 
 app.post('/service/content/findContentById', (req, res, next) => {
   ContentCtrl.findContentById(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/findContentVideo', (req, res, next) => {
+  ContentCtrl.findContentVideo(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/findContentImage', (req, res, next) => {
+  ContentCtrl.findContentImage(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/findContentEBook', (req, res, next) => {
+  ContentCtrl.findContentEBook(req).then((responeData) => {
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/uploadImageDetail', function (req, res) {
+  UploadCtrl.uploadImageDetail(req, __dirname).then((responeData) => {
+    console.log(responeData);
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/uploadEBookContent', function (req, res) {
+  UploadCtrl.uploadFileEBook(req.files.fileEBookContent, __dirname).then((responeData) => {
+    console.log("/service/content/uploadEBookContent => " , responeData);
+    res.send(responeData);
+  });
+});
+
+app.post('/service/content/uploadVideoContent', function (req, res) {
+  UploadCtrl.uploadVideoContent(req.files.urlContent, __dirname).then((responeData) => {
+    console.log("/service/content/uploadVideoContent => " , responeData);
     res.send(responeData);
   });
 });
