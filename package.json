@@ -16,7 +16,7 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
-    "express-fileupload": "^0.4.0",
+    "express-fileupload": "^1.1.10",
     "lodash": "^4.17.11",
     "mysql": "^2.16.0",
     "path": "^0.12.7",
